@@ -21,11 +21,11 @@
                 {% endfor %}
 
                 {% if update %}
-                <form method="post" href="/post_edit/{{ author.username }}/{{ post.pk }}">
-                    {% else %}
-                    <form method="post" action="{% url 'new_post' %}">
-                        {% endif %}
-                        {% csrf_token %}
+                <form method="post" enctype="multipart/form-data" href="/post_edit/{{ author.username }}/{{ post.pk }}">
+                {% else %}
+                <form method="post" enctype="multipart/form-data" action="{% url 'new_post' %}">
+                {% endif %}
+                    {% csrf_token %}
 
                         {% for field in form %}
                         <div class="form-group row"
@@ -46,15 +46,9 @@
                         {% endfor %}
 
                         <div class="col-md-6 offset-md-4">
-                            {% if update %}
                             <button type="submit" class="btn btn-primary">
-                                Сохранить
+                                {% if update %}Сохранить {% else %} Добавить  {% endif %}
                             </button>
-                            {% else %}
-                            <button type="submit" class="btn btn-primary">
-                                Добавить
-                            </button>
-                            {% endif %}
                         </div>
                     </form>
             </div> <!-- card body -->
