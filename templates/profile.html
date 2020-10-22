@@ -5,37 +5,14 @@
 <div class="row">
     <div class="col-md-3 mb-3 mt-1">
         <div class="card">
-            {% include 'author.html' %}
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <div class="h6 text-muted">
-                        Подписчиков: XXX <br />
-                        Подписан: XXX
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="h6 text-muted">
-                        <!-- Количество записей -->
-                        Записей: {{ post_list.count }}
-
-                    </div>
-                </li>
-            </ul>
+            {% include 'useful_info/author.html' with author=author post_list=post_list%}
         </div>
     </div>
-
     <div class="col-md-9">
         {% for post in page %}
-        <!-- Начало блока с отдельным постом -->
-        <div class="card mb-3 mt-1 shadow-sm">
-            {% include 'post_info.html' %}
-        </div>
-        <!-- Конец блока с отдельным постом -->
+        {% include 'useful_info/post_info.html' %}
         {% endfor %}
 
-        <!-- Остальные посты -->
-
-        <!-- Здесь постраничная навигация паджинатора -->
         {% if page.has_other_pages %}
         {% include "paginator.html" with items=page paginator=paginator %}
         {% endif %}

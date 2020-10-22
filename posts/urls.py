@@ -1,4 +1,6 @@
-from django.urls import path
+import debug_toolbar
+from django.conf import settings
+from django.urls import path, include
 from . import views
 
 
@@ -13,4 +15,6 @@ urlpatterns = [
         views.post_edit, 
         name='post_edit'
     ),
+    path("<username>/<int:post_id>/comment", views.add_comment, name="add_comment"),
+    path('__debug__/', include(debug_toolbar.urls)),
 ]

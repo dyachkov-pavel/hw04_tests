@@ -5,30 +5,12 @@
 <div class="row">
     <div class="col-md-3 mb-3 mt-1">
         <div class="card">
-            {% include 'author.html' %}
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <div class="h6 text-muted">
-                        Подписчиков: XXX <br />
-                        Подписан: XXX
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="h6 text-muted">
-                        <!--Количество записей -->
-                        Записей: {{ post_list.count }}
-                    </div>
-                </li>
-            </ul>
+            {% include 'useful_info/author.html' with author=author post_list=post_list%}
         </div>
     </div>
 
     <div class="col-md-9">
-
-        <!-- Пост -->
-        <div class="card mb-3 mt-1 shadow-sm">
-            {% include 'post_info.html' %}
-        </div>
+        {% include 'useful_info/post_info.html' with add_comment=add_comment %}
     </div>
 </div>
 </main>

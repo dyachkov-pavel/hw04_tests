@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Новая запись{% endblock %}
+{% block title %}
+{% if update %}Обновить запись{% else %}Новая запись{%endif %}
+{% endblock %}
 {% block content %}
 {% load user_filters %}
 
@@ -21,7 +23,7 @@
                 {% endfor %}
 
                 {% if update %}
-                <form method="post" enctype="multipart/form-data" href="/post_edit/{{ author.username }}/{{ post.pk }}">
+                <form method="post" enctype="multipart/form-data" action="{% url 'post_edit' author.username post.pk %}">
                 {% else %}
                 <form method="post" enctype="multipart/form-data" action="{% url 'new_post' %}">
                 {% endif %}
