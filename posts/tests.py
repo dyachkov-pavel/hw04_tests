@@ -87,8 +87,6 @@ class TestViewMethods(TestCase):
         self.client.post(
             url_edit_post, {'text': 'test_text_updated', 'group': self.group_2.id})
         edited_post = Post.objects.last()
-        print(self.post_1.text, self.post_1.group.title)
-        print(edited_post.text, edited_post.group.title,)
         urls = [
             reverse('index'),
             reverse('profile', kwargs={'username': self.user_1.username}),
