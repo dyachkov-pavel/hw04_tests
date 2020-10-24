@@ -18,7 +18,7 @@ class TestViewMethods(TestCase):
             title='test_title',
             slug='test_slug'
         )
-        self.original_text = 'test_text'
+        # self.original_text = 'test_text'
 
     def test_profile(self):
         url = reverse('profile', kwargs={'username': self.user.username})
@@ -26,13 +26,14 @@ class TestViewMethods(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_new_post_authorized(self):
+        original_text = 'test_text'
         url = reverse('new_post')
         self.client.post(
-            url, {'text': self.original_text, 'group': self.group_1.id})
+            url, {'text': original_text, 'group': self.group_1.id})
         post = Post.objects.first()
-        self.assertEqual(self.original_text, post.text)
+        self.assertEqual(original_text, post.text)
         self.assertEqual(self.user, post.author)
-        self.assertEqual(self.group_1.title, post.group.title)
+        self.assertEqual(self.group_1, post.group)
         self.assertEqual(Post.objects.all().count(), 1)
 
     def test_new_post_unauthorized(self):
@@ -50,11 +51,12 @@ class TestViewMethods(TestCase):
             response_post = response.context['post']
         self.assertEqual(response_post, post)
         self.assertEqual(response_post.author, user)
-        self.assertEqual(response_post.group.title, post.group.title)
+        self.assertEqual(response_post.group, post.group)
 
     def test_pages_contains_new_post(self):
-        post_1 = Post.objects.create(
-            text=self.original_text,
+        original_text = 'test_text'
+        post = Post.objects.create(
+            text=original_text,
             author=self.user,
             group=self.group_1
         )
@@ -62,15 +64,16 @@ class TestViewMethods(TestCase):
             reverse('index'),
             reverse('profile', kwargs={'username': self.user.username}),
             reverse('post', kwargs={
-                    'username': self.user.username, 'post_id': post_1.id}),
+                    'username': self.user.username, 'post_id': post.id}),
             reverse('group_posts', kwargs={'slug': self.group_1.slug})
         ]
         for url in urls:
-            self.check_posts(url, post_1, self.user)
+            self.check_posts(url, post, self.user)
 
     def test_post_edit(self):
-        post_1 = Post.objects.create(
-            text=self.original_text,
+        original_text = 'test_text'
+        post = Post.objects.create(
+            text=original_text,
             author=self.user,
             group=self.group_1
         )
@@ -81,7 +84,7 @@ class TestViewMethods(TestCase):
         url_edit_post = reverse('post_edit',
                                 kwargs={
                                     'username': self.user.username,
-                                    'post_id': post_1.id}
+                                    'post_id': post.id}
                                 )
         self.client.post(
             url_edit_post, {'text': 'test_text_updated', 'group': group_2.id})
@@ -90,14 +93,14 @@ class TestViewMethods(TestCase):
             reverse('index'),
             reverse('profile', kwargs={'username': self.user.username}),
             reverse('post', kwargs={
-                    'username': self.user.username, 'post_id': post_1.id}),
+                    'username': self.user.username, 'post_id': post.id}),
             reverse('group_posts', kwargs={'slug': group_2.slug}),
         ]
         for url in urls:
             self.check_posts(url, edited_post, self.user)
         response = self.client.get(
             reverse('group_posts', kwargs={'slug': self.group_1.slug}))
-        self.assertEqual(response.context['paginator'].object_list.count(), 0)
+        self.assertEqual(response.context['paginator'].count, 0)
 
     def test_page_not_found(self):
         url_not_found = '/unknown_adress/22123/'
